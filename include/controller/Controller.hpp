@@ -1,9 +1,6 @@
-#ifndef CONTROLLER_HPP
-#define CONTROLLER_HPP
+#pragma once
 
 class Controller {
 public:
     void process(float temperature);
 };
-
-#endif

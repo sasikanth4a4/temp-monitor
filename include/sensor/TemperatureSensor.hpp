@@ -1,9 +1,6 @@
-#ifndef TEMP_SENSOR_HPP
-#define TEMP_SENSOR_HPP
+#pragma once
 
 class TemperatureSensor {
 public:
     float readTemperature();
 };
-
-#endif

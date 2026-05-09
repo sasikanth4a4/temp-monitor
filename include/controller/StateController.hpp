@@ -1,5 +1,4 @@
-#ifndef STATE_CONTROLLER_HPP
-#define STATE_CONTROLLER_HPP
+#pragma once
 
 #include "controller/State.hpp"
 
@@ -11,5 +10,3 @@ public:
 private:
     State currentState;
 };
-
-#endif
