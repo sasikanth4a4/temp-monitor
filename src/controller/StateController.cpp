@@ -2,12 +2,16 @@
 #include "utils/Logger.hpp"
 #include "utils/Config.hpp"
 #include <string>
+#include <numeric>
 
 StateController::StateController() {
     currentState = State::IDLE;
 }
 
-void StateController::process(float temperature) {
+void StateController::process(const std::vector<float>& temperatures) {
+    if (temperatures.empty()) return;
+
+    float avgTemp = calculateAverage(temperatures);
     int threshold = Config::getThreshold();
 
     switch (currentState) {
@@ -18,21 +22,26 @@ void StateController::process(float temperature) {
             break;
 
         case State::RUNNING:
-            if (temperature > threshold) {
-                Logger::log("[STATE] RUNNING -> COOLING (Temp: " + std::to_string(temperature) + ")");
+            if (avgTemp > threshold) {
+                Logger::log("[STATE] RUNNING -> COOLING (Avg Temp: " + std::to_string(avgTemp) + ")");
                 currentState = State::COOLING;
             } else {
-                Logger::log("[STATE] RUNNING (Temp: " + std::to_string(temperature) + ")");
+                Logger::log("[STATE] RUNNING (Avg Temp: " + std::to_string(avgTemp) + ")");
             }
             break;
 
         case State::COOLING:
-            if (temperature <= threshold) {
-                Logger::log("[STATE] COOLING -> RUNNING (Temp: " + std::to_string(temperature) + ")");
+            if (avgTemp <= threshold) {
+                Logger::log("[STATE] COOLING -> RUNNING (Avg Temp: " + std::to_string(avgTemp) + ")");
                 currentState = State::RUNNING;
             } else {
-                Logger::log("[STATE] COOLING (Temp high: " + std::to_string(temperature) + ")");
+                Logger::log("[STATE] COOLING (Avg Temp high: " + std::to_string(avgTemp) + ")");
             }
             break;
     }
+}
+
+float StateController::calculateAverage(const std::vector<float>& temperatures) const {
+    if (temperatures.empty()) return 0.0f;
+    return std::accumulate(temperatures.begin(), temperatures.end(), 0.0f) / temperatures.size();
 }
