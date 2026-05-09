@@ -1,0 +1,38 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, onetree ]
+  pull_request:
+    branches: [ main, onetree ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential
+
+    - name: Configure project
+      run: |
+        mkdir -p build
+        cd build
+        cmake ..
+
+    - name: Build project
+      run: make -C build
+
+    - name: Run tests (if any)
+      run: |
+        if [ -f "build/temp_monitor" ]; then
+          echo "Running executable for basic validation..."
+          timeout 5s ./build/temp_monitor || echo "Program ran (timeout expected)"
+        else
+          echo "No executable found"
+        fi

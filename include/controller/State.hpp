@@ -1,10 +1,7 @@
-#ifndef STATE_HPP
-#define STATE_HPP
+#pragma once
 
 enum class State {
     IDLE,
     RUNNING,
     COOLING
 };
-
-#endif

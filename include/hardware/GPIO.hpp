@@ -1,10 +1,7 @@
-#ifndef GPIO_HPP
-#define GPIO_HPP
+#pragma once
 
 class GPIO {
 public:
     static void setHigh(int pin);
     static void setLow(int pin);
 };
-
-#endif
